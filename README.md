@@ -32,8 +32,8 @@
 | 舵机信号 | PA0 | TIM2_CH1，50 Hz PWM |
 | 舵机电源 | 独立 5 V | 红线接独立 5 V/≥1 A 电源 |
 | 舵机地 | 独立电源 GND | 与 STM32 GND 共地 |
-| OLED SCL | PB0 | 软件 I²C，开漏输出 |
-| OLED SDA | PB1 | 软件 I²C，开漏输出 |
+| OLED SCL | PB1 | 软件 I²C，开漏输出 |
+| OLED SDA | PB0 | 软件 I²C，开漏输出 |
 | OLED VCC | 3.3 V | 由 STM32 板 3.3 V 供电 |
 | OLED GND | GND | 与单片机共地 |
 | +15° 按键 | PA11 | 另一端接 GND，内部上拉，下降沿中断 |
