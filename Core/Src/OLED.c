@@ -4,14 +4,27 @@
 /*引脚配置*/
 #define OLED_W_SCL(x)		HAL_GPIO_WritePin(GPIOB, GPIO_PIN_1, (GPIO_PinState)(x))
 #define OLED_W_SDA(x)		HAL_GPIO_WritePin(GPIOB, GPIO_PIN_0, (GPIO_PinState)(x))
+#define OLED_I2C_DELAY_US	1U
+
+static void OLED_I2C_Delay(void)
+{
+	uint32_t start = DWT->CYCCNT;
+	uint32_t ticks = OLED_I2C_DELAY_US * (SystemCoreClock / 1000000U);
+
+	while ((DWT->CYCCNT - start) < ticks)
+	{
+	}
+}
 
 /*引脚初始化*/
 void OLED_I2C_Init(void)
 {
+	uint8_t i;
+
     __HAL_RCC_GPIOB_CLK_ENABLE();
 
     GPIO_InitTypeDef GPIO_InitStructure = {0};
-    GPIO_InitStructure.Speed=GPIO_SPEED_HIGH;
+    GPIO_InitStructure.Speed=GPIO_SPEED_FREQ_LOW;
     GPIO_InitStructure.Mode=GPIO_MODE_OUTPUT_OD;
     GPIO_InitStructure.Pull=GPIO_NOPULL;
     GPIO_InitStructure.Pin=GPIO_PIN_0|GPIO_PIN_1;
@@ -20,6 +33,21 @@ void OLED_I2C_Init(void)
 
     OLED_W_SCL(1);
     OLED_W_SDA(1);
+
+	/* 9 clocks recover a slave that was interrupted in the middle of a byte. */
+	for (i = 0; i < 9U; i++)
+	{
+		OLED_W_SCL(0);
+		OLED_I2C_Delay();
+		OLED_W_SCL(1);
+		OLED_I2C_Delay();
+	}
+	OLED_W_SDA(0);
+	OLED_I2C_Delay();
+	OLED_W_SCL(1);
+	OLED_I2C_Delay();
+	OLED_W_SDA(1);
+	OLED_I2C_Delay();
 }
 
 /**
@@ -30,9 +58,13 @@ void OLED_I2C_Init(void)
 void OLED_I2C_Start(void)
 {
 	OLED_W_SDA(1);
+	OLED_I2C_Delay();
 	OLED_W_SCL(1);
+	OLED_I2C_Delay();
 	OLED_W_SDA(0);
+	OLED_I2C_Delay();
 	OLED_W_SCL(0);
+	OLED_I2C_Delay();
 }
 
 /**
@@ -43,8 +75,11 @@ void OLED_I2C_Start(void)
 void OLED_I2C_Stop(void)
 {
 	OLED_W_SDA(0);
+	OLED_I2C_Delay();
 	OLED_W_SCL(1);
+	OLED_I2C_Delay();
 	OLED_W_SDA(1);
+	OLED_I2C_Delay();
 }
 
 /**
@@ -58,11 +93,18 @@ void OLED_I2C_SendByte(uint8_t Byte)
 	for (i = 0; i < 8; i++)
 	{
 		OLED_W_SDA(Byte & (0x80 >> i));
+		OLED_I2C_Delay();
 		OLED_W_SCL(1);
+		OLED_I2C_Delay();
 		OLED_W_SCL(0);
+		OLED_I2C_Delay();
 	}
-	OLED_W_SCL(1);	//额外的一个时钟，不处理应答信号
+	OLED_W_SDA(1);	//释放SDA，让从机给出ACK
+	OLED_I2C_Delay();
+	OLED_W_SCL(1);
+	OLED_I2C_Delay();
 	OLED_W_SCL(0);
+	OLED_I2C_Delay();
 }
 
 /**
@@ -271,6 +313,10 @@ void OLED_ShowBinNum(uint8_t Line, uint8_t Column, uint32_t Number, uint8_t Leng
 void OLED_Init(void)
 {
 	uint32_t i, j;
+
+	CoreDebug->DEMCR |= CoreDebug_DEMCR_TRCENA_Msk;
+	DWT->CYCCNT = 0U;
+	DWT->CTRL |= DWT_CTRL_CYCCNTENA_Msk;
 	
 	for (i = 0; i < 1000; i++)			//上电延时
 	{

@@ -48,15 +48,19 @@ static void OLED_ShowStatus(uint8_t angle, uint16_t ccr)
   OLED_ShowString(1U, 1U, "Target:");
   OLED_ShowNum(1U, 8U, angle, 3U);
   OLED_ShowString(1U, 11U, "deg");
+  OLED_ShowString(1U, 14U, "   ");
 
   OLED_ShowString(2U, 1U, "CCR   :");
   OLED_ShowNum(2U, 8U, ccr, 4U);
+  OLED_ShowString(2U, 12U, "     ");
 
   OLED_ShowString(3U, 1U, "Pulse :");
   OLED_ShowNum(3U, 8U, ccr / 1000U, 1U);
   OLED_ShowString(3U, 9U, ".");
   OLED_ShowNum(3U, 10U, ccr % 1000U, 3U);
   OLED_ShowString(3U, 13U, "ms");
+  OLED_ShowString(3U, 15U, "  ");
+  OLED_ShowString(4U, 1U, "                ");
 }
 
 static void UART_PrintStatus(uint8_t angle, uint16_t ccr)
