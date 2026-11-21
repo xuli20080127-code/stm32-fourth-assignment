@@ -1,0 +1,18 @@
+# CLion and CMake local output
+.idea/
+cmake-build-*/
+build/
+
+# Compiler outputs that may appear outside the build directory
+*.elf
+*.hex
+*.bin
+*.map
+*.o
+
+# Local captures and OS files
+*.mp4
+*.avi
+*.log
+.DS_Store
+Thumbs.db

@@ -1,0 +1,15 @@
+STM32F103C8T6 Servo + OLED assignment
+USART: USART1, 115200, 8 data bits, no parity, 1 stop bit
+Captured from CH340 COM8 on 2026-11-21
+
+Target=  0  CCR= 550  Pulse=0.550ms
+Target= 45  CCR=1025  Pulse=1.025ms
+Target= 90  CCR=1500  Pulse=1.500ms
+Target=135  CCR=1975  Pulse=1.975ms
+Target=180  CCR=2450  Pulse=2.450ms
+
+Button regression:
+PA12 (-15 degrees)
+Target=165  CCR=2292  Pulse=2.292ms
+PA11 (+15 degrees)
+Target=180  CCR=2450  Pulse=2.450ms
