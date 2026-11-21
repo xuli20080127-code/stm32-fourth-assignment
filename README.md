@@ -5,6 +5,8 @@
 - 姓名：许锂
 - 学号：20263008243
 - 学院：信息与通信工程学院
+- GitHub 账号：xuli20080127-code
+- 项目仓库：https://github.com/xuli20080127-code/RM-2027------
 - 开发板：STM32F103C8T6
 - 开发环境：STM32CubeMX、CLion 2026.2.2、ARM GCC 10.3-2021.10、CMake、Ninja
 - 下载器：ST-Link V2
